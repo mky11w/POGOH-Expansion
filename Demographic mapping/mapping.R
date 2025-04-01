@@ -7,10 +7,10 @@ library(tigris)
 
 tracts <- st_read("Boundaries/Census_Tract_2020/Census_Tract_2020.shp")
 
-minority <- read.csv("/Users/mkay11/POGOH-Expansion/disbility_percentage.csv") %>%
+minority <- read.csv("Demographic mapping/result.csv") %>%
   rename(geoid = GEOID) %>%
   mutate(geoid = as.character(geoid))%>%
-  filter(total>10)
+  filter(PCA1>0)
 
 pgh_boundary <- places(state = "PA", cb = TRUE) %>%
   filter(NAME == "Pittsburgh") %>%
@@ -24,9 +24,9 @@ distribution <- left_join(pittsburgh_tracts, minority, by = "geoid")
 
 
 ggplot() +
-  geom_sf(data = distribution, aes(fill = disbility_percentage), color = "black", size = 0.2) +
+  geom_sf(data = distribution, aes(fill = PCA1), color = "black", size = 0.2) +
   scale_fill_viridis_c(option = "C", na.value = "lightgrey") +
   labs(
-    fill ="disability_percentage"
+    fill ="demographic mapping"
   ) +
   theme_minimal()
